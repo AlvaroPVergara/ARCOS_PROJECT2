@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.16)
 project(images LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -8,13 +8,15 @@ add_compile_options(-Wall -Wextra -Werror -pedantic -pedantic-errors)
 
 set(CMAKE_CXX_FLAGS_RELEASE "-march=native")
 
+find_package(OpenMP REQUIRED)
+
 add_subdirectory(common)
 add_subdirectory(aos)
 add_subdirectory(soa)
 add_executable(img-aos imageaos.cpp)
 add_executable(img-soa imagesoa.cpp)
-target_link_libraries(img-aos aos common)
-target_link_libraries(img-soa soa common)
+target_link_libraries(img-aos PUBLIC OpenMP::OpenMP_CXX aos common)
+target_link_libraries(img-soa PUBLIC OpenMP::OpenMP_CXX soa common)
 target_include_directories(img-aos PUBLIC common aos)
 target_include_directories(img-soa PUBLIC common soa)
 
