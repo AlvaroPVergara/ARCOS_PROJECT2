@@ -1,7 +1,7 @@
 #include "bitmap_aos.hpp"
 #include "common/file_error.hpp"
 #include <fstream>
-#include <omp.h>
+
 
 namespace images::aos {
 
