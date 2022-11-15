@@ -117,14 +117,29 @@ namespace images::soa {
   }
 
   histogram bitmap_soa::generate_histogram() const noexcept {
-    histogram histo;
-    const int pixel_count = width() * height();
-    for (int i = 0; i < pixel_count; ++i) {
-      histo.add_red(pixels[red_channel][i]);
-      histo.add_green(pixels[green_channel][i]);
-      histo.add_blue(pixels[blue_channel][i]);
-    }
-    return histo;
+      histogram histo;
+
+      const int pixel_count = width() * height();
+
+#pragma omp parallel
+      {
+          #pragma omp sections
+          {
+              #pragma omp section
+              for (int i = 0; i < pixel_count; ++i) {
+                  histo.add_red(pixels[red_channel][i]);
+              }
+              #pragma omp section
+              for (int i = 0; i < pixel_count; ++i) {
+                  histo.add_green(pixels[green_channel][i]);
+              }
+              #pragma omp section
+              for (int i = 0; i < pixel_count; ++i) {
+                  histo.add_blue(pixels[blue_channel][i]);
+              }
+          }
+      }
+          return histo;
   }
 
   void bitmap_soa::print_info(std::ostream & os) const noexcept {
