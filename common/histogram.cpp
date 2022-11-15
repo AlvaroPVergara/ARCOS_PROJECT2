@@ -3,6 +3,7 @@
 
 namespace images::common {
 
+
   void histogram::add_color(pixel p) noexcept {
     channels[red_channel][p.red()]++;
     channels[green_channel][p.green()]++;
@@ -21,4 +22,12 @@ namespace images::common {
     }
   }
 
+    void histogram::combinechannels(images::common::histogram& histo){
+
+        for (int i = 0; i < num_levels; ++i){
+            channels[red_channel][i] += histo.channels[red_channel][i];
+            channels[green_channel][i] += histo.channels[green_channel][i];
+            channels[blue_channel][i] += histo.channels[blue_channel][i];
+        }
+    }
 }

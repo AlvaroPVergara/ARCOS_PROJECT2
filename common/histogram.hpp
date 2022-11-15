@@ -21,6 +21,8 @@ namespace images::common {
 
     void add_blue(uint8_t b) noexcept { channels[blue_channel][b]++; }
 
+    void combinechannels(images::common::histogram& histo);
+
     [[nodiscard]] int get_red_frequency(uint8_t v) const noexcept {
       return channels[red_channel][v];
     }
@@ -35,7 +37,8 @@ namespace images::common {
 
     void write(std::ostream & os) const noexcept;
 
-  private:
+
+  public:
     static constexpr int num_levels = 256;
     std::array<std::vector<int>, 3> channels = {std::vector<int>(num_levels),
                                                 std::vector<int>(num_levels),

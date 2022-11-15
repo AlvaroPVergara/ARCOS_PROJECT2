@@ -110,10 +110,20 @@ namespace images::aos {
   histogram bitmap_aos::generate_histogram() const noexcept {
     histogram histo;
     const int pixel_count = width() * height();
-    #pragma omp parallel for private(histo)
-      for (int i = 0; i < pixel_count; ++i) {
-      histo.add_color(pixels[i]);
-    }
+      /*for (int i = 0; i < pixel_count; ++i) {
+          histo.add_color(pixels[i]);
+      }*/
+#pragma omp parallel
+      {
+          histogram histo_thread;
+#pragma omp for
+          for (int i = 0; i < pixel_count; ++i) {
+              histo_thread.add_color(pixels[i]);
+          }
+
+            #pragma omp critical
+          histo.combinechannels(histo_thread);
+      }
     return histo;
   }
 
